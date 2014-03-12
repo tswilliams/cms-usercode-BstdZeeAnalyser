@@ -7,5 +7,5 @@
 <use   name="TSWilliams/BstdZeeNTupler"/>
 
 <lib   name="GenVector"/>
-<bin   name="BstdZeeFirstAnalyser" file="*.cpp">
+<bin   name="BstdZeeFirstAnalyser" file="BstdZeeFirstAnalyser.cpp">
 </bin>
