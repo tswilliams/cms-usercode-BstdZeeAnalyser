@@ -42,7 +42,7 @@ fi
 THE_CMSSW_LIB_DIR=$CMSSW_BASE/lib/$SCRAM_ARCH
 THE_CMSSW_BIN_DIR=$CMSSW_BASE/bin/$SCRAM_ARCH
 
-FROZEN_BASE_DIR=/opt/ppd/newscratch/williams/BatchJobs/BstdZee_FrozenLibs/$DATE_TIME_STRING
+FROZEN_BASE_DIR=/opt/ppd/scratch/williams/BatchJobs/BstdZee_FrozenLibs/$DATE_TIME_STRING
 FROZEN_LIB_DIR=$FROZEN_BASE_DIR/lib
 FROZEN_BIN_DIR=$FROZEN_BASE_DIR/bin
 
@@ -101,18 +101,19 @@ echo "$PARSED_CONFIG_FILE" | while read line; do
    export BSTDZEE_ANR_BIN_DIR="$FROZEN_BIN_DIR"
    
    echo 
+   echo " --------------------------------------------------------------------------------------------"
+   echo " --------------------------------------------------------------------------------------------"
    echo "  + About to submit job '"$THE_JOB_NAME"' with following parameters:"
    echo "       - jobLogFile ="$THE_JOB_LOG_FILE
    echo "       - anrOptions ="$THE_ANR_ARGS
    echo "       - outputDir  ="$BSTDZEE_ANR_OUT_DIR
 
-   echo "s@AWK\_LOGFILE@$THE_JOB_LOG_FILE.log@g"
    sed "s@AWK\_LOGFILE@$THE_JOB_LOG_FILE.log@g" condor_config_template.txt | \
        sed "s@AWK\_OUTFILE@$THE_JOB_LOG_FILE.out@g" | \
        sed "s@AWK\_ERRFILE@$THE_JOB_LOG_FILE.err@g" > condor_config_tmp.txt
 
    cat condor_config_tmp.txt
-   #condor_submit condor_config_tmp.txt
+   condor_submit condor_config_tmp.txt
 
 #   $QSUB_CMD -q prod -j oe -o$THE_JOB_LOG_FILE -l cput=12:00:00,walltime=12:00:00,mem=1gb -N $THE_JOB_NAME \
 #          -v LD_LIBRARY_PATH,BSTDZEE_ANR_ARGS,BSTDZEE_ANR_OUT_DIR,BSTDZEE_ANR_BIN_DIR=$FROZEN_BIN_DIR scripts/batch_run_analyser.sh >& __tmp_jobNo.txt

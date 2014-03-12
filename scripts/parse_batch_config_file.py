@@ -101,7 +101,7 @@ for ithLine in configFile_lines:
    
    for subSampleNo in range(1,anrArgs_numJobs+1):
       ithJobName            = jobName
-      ithJobLogFile         = jobLogFile
+      ithJobLogFile         = jobLogFile + "." + str(subSampleNo)
       ithAnrArgs_outFileTag = anrArgs_outputFileTag
       ithAnrArgsString      = anrArgsString
       
