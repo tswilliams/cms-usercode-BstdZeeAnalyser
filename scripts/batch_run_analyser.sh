@@ -23,10 +23,11 @@ echo "  * BSTDZEE_ANR_OUT_DIR ="$BSTDZEE_ANR_OUT_DIR
 
 # STAGE 0. cd into the data (i.e. large capacity) dir for this job
 echo
-JOB_SCRATCH_DIR=/scratch/${PBS_JOBID}
+JOB_SCRATCH_DIR="$_CONDOR_SCRATCH_DIR"
 echo "About to cd into job's scratch dir: "$JOB_SCRATCH_DIR
-mkdir -p $JOB_SCRATCH_DIR
+#mkdir -p $JOB_SCRATCH_DIR
 cd $JOB_SCRATCH_DIR
+df -h /
 
 
 # STAGE 1. Run the analyser

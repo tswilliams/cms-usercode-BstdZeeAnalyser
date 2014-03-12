@@ -1,0 +1,15 @@
+
+#################################################################
+# A template Condor config file for running BstdZeeAnalyser batch jobs at RAL
+# March 2014
+#
+
+Universe     = vanilla
+Executable   = scripts/batch_run_analyser.sh
+Log          = AWK_LOGFILE
+Output       = AWK_OUTFILE
+Error        = AWK_ERRFILE
+Notification = complete
+Notify_user  = t.williams@cern.ch
+Getenv       = True
+Queue 

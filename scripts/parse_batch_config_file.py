@@ -97,7 +97,7 @@ for ithLine in configFile_lines:
    
    # Print out jobName ; jobLogFile ; Anr options
    jobName = "BstdZAna_"+anrArgs_outputFileTag
-   jobLogFile = baseOutputDir+"/"+anrArgs_outputFileTag+".log"
+   jobLogFile = baseOutputDir+"/"+anrArgs_outputFileTag
    
    for subSampleNo in range(1,anrArgs_numJobs+1):
       ithJobName            = jobName

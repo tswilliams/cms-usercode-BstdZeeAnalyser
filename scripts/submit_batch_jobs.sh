@@ -98,6 +98,7 @@ echo "$PARSED_CONFIG_FILE" | while read line; do
 
    export BSTDZEE_ANR_ARGS="$THE_ANR_ARGS"
    export BSTDZEE_ANR_OUT_DIR="$ANR_OUTPUT_DIR"
+   export BSTDZEE_ANR_BIN_DIR="$FROZEN_BIN_DIR"
    
    echo 
    echo "  + About to submit job '"$THE_JOB_NAME"' with following parameters:"
@@ -105,10 +106,18 @@ echo "$PARSED_CONFIG_FILE" | while read line; do
    echo "       - anrOptions ="$THE_ANR_ARGS
    echo "       - outputDir  ="$BSTDZEE_ANR_OUT_DIR
 
-   $QSUB_CMD -q prod -j oe -o$THE_JOB_LOG_FILE -l cput=12:00:00,walltime=12:00:00,mem=1gb -N $THE_JOB_NAME \
-          -v LD_LIBRARY_PATH,BSTDZEE_ANR_ARGS,BSTDZEE_ANR_OUT_DIR,BSTDZEE_ANR_BIN_DIR=$FROZEN_BIN_DIR scripts/batch_run_analyser.sh >& __tmp_jobNo.txt
-   echo "       * Job submitted ("`cat __tmp_jobNo.txt`")"
-   rm __tmp_jobNo.txt
+   echo "s@AWK\_LOGFILE@$THE_JOB_LOG_FILE.log@g"
+   sed "s@AWK\_LOGFILE@$THE_JOB_LOG_FILE.log@g" condor_config_template.txt | \
+       sed "s@AWK\_OUTFILE@$THE_JOB_LOG_FILE.out@g" | \
+       sed "s@AWK\_ERRFILE@$THE_JOB_LOG_FILE.err@g" > condor_config_tmp.txt
+
+   cat condor_config_tmp.txt
+   #condor_submit condor_config_tmp.txt
+
+#   $QSUB_CMD -q prod -j oe -o$THE_JOB_LOG_FILE -l cput=12:00:00,walltime=12:00:00,mem=1gb -N $THE_JOB_NAME \
+#          -v LD_LIBRARY_PATH,BSTDZEE_ANR_ARGS,BSTDZEE_ANR_OUT_DIR,BSTDZEE_ANR_BIN_DIR=$FROZEN_BIN_DIR scripts/batch_run_analyser.sh >& __tmp_jobNo.txt
+#   echo "       * Job submitted ("`cat __tmp_jobNo.txt`")"
+#   rm __tmp_jobNo.txt
 
 done
 
