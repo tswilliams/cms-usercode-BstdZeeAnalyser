@@ -9,7 +9,9 @@ Executable   = scripts/batch_run_analyser.sh
 Log          = AWK_LOGFILE
 Output       = AWK_OUTFILE
 Error        = AWK_ERRFILE
+Getenv       = True
+
 Notification = complete
 Notify_user  = t.williams@cern.ch
-Getenv       = True
+
 Queue 

@@ -48,8 +48,8 @@ echo "Current directory: "`pwd`
 echo " * Contents:"
 ls -lh
 echo
-echo "Copying ROOT files to "$BSTDZEE_ANR_OUT_DIR
-cp *.root $BSTDZEE_ANR_OUT_DIR/
+echo "Moving ROOT files to "$BSTDZEE_ANR_OUT_DIR
+mv *.root $BSTDZEE_ANR_OUT_DIR/
 
 
 echo
