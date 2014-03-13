@@ -1,9 +1,11 @@
 {
+   gSystem->Load("/home/ppd/nnd85574/workspace/tswAnaToolsEclipse/lib/libtswAnaTools_CMSSW5XY.so");
+
    tsw::Samples2012 modIsoAnaTuples("modIsoZCandTree");
    tsw::Samples2012 emuAnaTuples("eleMuTree");
    tsw::Samples2012 abcdAnaTuples("abcdDiGsfTree");
 
-   /* // EMU CONTROL REGION //
+   // EMU CONTROL REGION //
 
    tsw::EMuControlPlotMaker emuPlotter("eleMuTree");
    emuPlotter.selection("(eleMu_p4.M()<105 && eleMu_p4.M()>75) && (muon_p4.Pt()>35.0 && ele_p4.Pt()>35.0) && abs(muon_p4.Eta())<1.442 && abs(ele_p4.Eta())<1.442");
@@ -30,7 +32,7 @@
    //emuPlotter.add( tsw::AxisDefn("ele_p4.Pt()", 48, 20.0, 500.0, "Electron p_{T} [GeV]") );
    //emuPlotter.add( tsw::AxisDefn("muon_p4.Pt()", 48, 20.0, 500.0, "Muon p_{T} [GeV]") );
    emuPlotter.run();
-   */
+   
 
    // QCD -- SIDEBAND-BASED //
 

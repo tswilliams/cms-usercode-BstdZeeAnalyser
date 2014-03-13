@@ -1,8 +1,11 @@
 {
+   gSystem->Load("/home/ppd/nnd85574/workspace/tswAnaToolsEclipse/lib/libtswAnaTools_CMSSW5XY.so");
+
 	tsw::Samples2012 modIsoAnaTuples("modIsoZCandTree");
 	tsw::Samples2012 noIsoAnaTuples("noIsoZCandTree");
 	tsw::Samples2012 emuAnaTuples("eleMuTree");
 
+   /*
 	tsw::DistPlotter dyEeJetsPlotter(true);
 	dyEeJetsPlotter.setTree("modIsoZBosonTree");
 	dyEeJetsPlotter.setSelection("(Zmass<105 && Zmass>75) && (abs(dPhi)>=0.3 || abs(dEta)>=0.07)");
@@ -14,9 +17,10 @@
 	//	dyEeJetsPlotter.add( tsw::AxisDefn("lheZp4.Pt()", 50, 0.0, 500.0, "LHE p_{T,ee} [GeV]") );
 	dyEeJetsPlotter.add( tsw::AxisDefn("ZpT", "[0,10,20,30,40,50,60,70,80,90,100, 120,140,160,180,220,260,300,350,400,500,600,700,800]", "p_{T,ee} [GeV]", 10.0) );
 	dyEeJetsPlotter.run();
+   */
 
 
-	/*
+
 	//-> 1) Data vs MC plots
 	tsw::DistPlotter dataPlots_main;
 	dataPlots_main.setTree("modIsoZBosonTree");
@@ -52,7 +56,7 @@
   	dataPlots_main.add( tsw::AxisDefn("dPhi", 40, -3.14, +3.14, "#Delta#phi_{ee}"));
 
 	//	dataPlots_main.outFilePrefix("results/dummy/DataVsMc_ee/ZCand_ModIso75To105_phiRd_PUweight_8TeV_all2012");
-	dataPlots_main.run( );*/
+	dataPlots_main.run( );
 
 	/*dataPlots_wideMass.setSelection("(abs(dPhi)>=0.3 || abs(dEta)>=0.07) && (eleA_modHeepStdThr==0 && eleB_modHeepStdThr==0)");
 	dataPlots_wideMass.outFilePrefix();
