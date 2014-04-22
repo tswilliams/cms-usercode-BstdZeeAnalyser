@@ -103,7 +103,16 @@ int tsw::Muon::highPtIdCutCode(float minPt, float maxEta) const
 	int cutCode = 0;
 
 	if( fabs(eta())>maxEta || pT()<minPt  )
+	{
 		cutCode |= mCutCode_fiducial;
+	}
+//	else
+//	{
+//		if( muStr_.passesHighPt )
+//			return 0;
+//		else
+//			return 0xffff;
+//	}
 
 	// is global muon
 	if( !isGlobalMuon() )
