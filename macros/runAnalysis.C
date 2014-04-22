@@ -1,6 +1,4 @@
 {
-   gSystem->Load("/home/ppd/nnd85574/workspace/tswAnaToolsEclipse/lib/libtswAnaTools_CMSSW5XY.so");
-
 	tsw::Samples2012 modIsoAnaTuples("modIsoZCandTree");
 	tsw::Samples2012 noIsoAnaTuples("noIsoZCandTree");
 	tsw::Samples2012 emuAnaTuples("eleMuTree");
@@ -55,7 +53,7 @@
   	dataPlots_main.add( tsw::AxisDefn("dEta", 64, -3.2, +3.2, "#Delta#eta_{ee}"));
   	dataPlots_main.add( tsw::AxisDefn("dPhi", 40, -3.14, +3.14, "#Delta#phi_{ee}"));
 
-	//	dataPlots_main.outFilePrefix("results/dummy/DataVsMc_ee/ZCand_ModIso75To105_phiRd_PUweight_8TeV_all2012");
+	dataPlots_main.outFilePrefix("results/20140422/data_vs_mc/ZCand_ModIso75To105_phiRd_PUweight_all8TeV");
 	dataPlots_main.run( );
 
 	/*dataPlots_wideMass.setSelection("(abs(dPhi)>=0.3 || abs(dEta)>=0.07) && (eleA_modHeepStdThr==0 && eleB_modHeepStdThr==0)");
