@@ -9,19 +9,32 @@
 
   // declare variables in ntuple wanted. 
 
-  RooRealVar pT("ZpT","ZpT",100,800) ;
+  RooRealVar pT("ZpT","Z boson p_{T} [GeV]",100,800) ;
 
 
   // --> SETTING UP DATASET
+  std::string lTitle = "p_{T} distribution - ";
 
   //TFile fg("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_1_modIsoZCandTree.root") ;
   TChain* modIsoZBosonTree = new TChain("modIsoZBosonTree");
-  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_1_modIsoZCandTree.root");
-  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_2_modIsoZCandTree.root");
-  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_3_modIsoZCandTree.root");
-  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_4_modIsoZCandTree.root");
-  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_5_modIsoZCandTree.root");
-  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_6_modIsoZCandTree.root");
+
+//  lTitle += "MG";
+//  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_1_modIsoZCandTree.root");
+//  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_2_modIsoZCandTree.root");
+//  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_3_modIsoZCandTree.root");
+//  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_4_modIsoZCandTree.root");
+//  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_5_modIsoZCandTree.root");
+//  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M50-MG_6_modIsoZCandTree.root");
+
+//  lTitle += "POWHEG";
+//  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M20-powheg_1_modIsoZCandTree.root");
+//  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M20-powheg_2_modIsoZCandTree.root");
+//  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M20-powheg_3_modIsoZCandTree.root");
+//  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M20-powheg_4_modIsoZCandTree.root");
+
+  lTitle += "PYTHIA6";
+  modIsoZBosonTree->Add("/opt/ppd/newscratch/williams/Datafiles/AnaTuples/bstdZeeAna_8TeV_53X_20130212/batch/DYToEE-M20-pythia6_modIsoZCandTree.root");
+
   RooDataSet ds("ds","ds",RooArgSet(pT),Import(*modIsoZBosonTree));
 
   TH1F *tmp = new TH1F("tmp","pt",140,100,800);
@@ -30,19 +43,18 @@
 
   // --> BASIC PLOTS OF DISTRIBUTION
 
-  c1->Draw(); c1->Update(); 
-  cout << "Waiting for you to press any key ... " << endl;
-  cin.get() ;
+//  c1->Draw(); c1->Update(); 
+//  cout << "Waiting for you to press any key ... " << endl;
+//  cin.get() ;
 
 
-  RooPlot* xframe = pT.frame(Title("Pt distribution")) ;
+  RooPlot* xframe = pT.frame(Title(lTitle.c_str())) ;
   ds.plotOn(xframe,Binning(140),MarkerStyle(7)) ;
   xframe->Draw();
 
   c1->Draw(); c1->Update();
-  cout << "Waiting for you to press any key ... " << endl; 
-  cin.get();
-
+ // cout << "Waiting for you to press any key ... " << endl; 
+ // cin.get();
  
   // --> SETTING UP FOR FITS
 
@@ -102,11 +114,15 @@
 
   xframe->Draw();
 
-  pareto.plotOn(xframe, Range(100,600), LineColor(kBlue));
-  std::cout << "pareto chi^2 : " << xframe->chiSquare() << std::endl;
   genpdf.plotOn(xframe, Range(100,600), LineColor(kGreen));
+  std::cout << "genpdf chi^2  : " << xframe->chiSquare() << std::endl;
+  genpdf1.plotOn(xframe, Range(100, 600), LineColor(kRed));
+  std::cout << "genpdf1 chi^2 : " << xframe->chiSquare() << std::endl;
+  pareto.plotOn(xframe, Range(100,600), LineColor(kBlue));
+  std::cout << "pareto chi^2  : " << xframe->chiSquare() << std::endl;
   xframe->Draw() ; 
 
+  c1->Draw(); c1->Update();
 
   // --> CALCULATING INTEGRALS
 
@@ -123,7 +139,10 @@
   int_sub_range[1] = Int_pareto.getVal() ;
   cout << " integral of Pareto function sub range " << int_sub_range[1] << endl;
 
-  cout << "Waiting for you to press any key ... " << endl; 
+  cout << " ------------------------------------------" << endl;
+  cout << " --- END OF PARETO vs OTHERS            ---" << endl;
+  cout << " ------------------------------------------" << endl;
+/*  cout << "Waiting for you to press any key ... " << endl; 
   cin.get();
 
   // --> REFITTING TO REDUCED RANGE
@@ -149,7 +168,7 @@
 
 
 
-
+*/
 }  // end for the moment
 
 
