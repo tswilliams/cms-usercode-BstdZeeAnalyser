@@ -181,6 +181,7 @@ namespace tsw{
 		UInt_t treeVar_nVtx_;
 
 		TLorentzVector* treeVar_lheZp4Ptr_; TLorentzVector treeVar_lheZp4_;
+ 	  Double_t treeVar_lheZpT_;
 
 		TLorentzVector* treeVar_Zp4Ptr_; TLorentzVector treeVar_Zp4_;
 		Double_t treeVar_ZpT_;
@@ -232,8 +233,10 @@ namespace tsw{
 			mainAnaTree_->Branch("trgDecision", &treeVar_trgDecision_, "trgDecision/O");
 			mainAnaTree_->Branch("nVtx", &treeVar_nVtx_, "nVtx/i");
 
-			if(isMadgraphDrellYan(fileName))
+			if(isMadgraphDrellYan(fileName)){
 				mainAnaTree_->Branch("lheZp4", &treeVar_lheZp4Ptr_);
+				mainAnaTree_->Branch("lheZpT", &treeVar_lheZpT_, "lheZpT/D");
+			}
 
 			mainAnaTree_->Branch("Zp4",   &treeVar_Zp4Ptr_);
 			mainAnaTree_->Branch("ZpT",   &treeVar_ZpT_,     "ZpT/D");
@@ -283,6 +286,7 @@ namespace tsw{
 			treeVar_nVtx_  = evtHelper.GetRecoVtx_nGoodVtxs();
 
 			treeVar_lheZp4_ = evtHelper.GetLHEZbosonP4();
+			treeVar_lheZpT_ = treeVar_lheZp4_.Pt();
 
 			treeVar_Zp4_   = diEle.p4();
 			treeVar_ZpT_   = diEle.pT();
