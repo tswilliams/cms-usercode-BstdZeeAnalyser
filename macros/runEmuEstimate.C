@@ -10,7 +10,7 @@
    emuPlotter.selection("(eleMu_p4.M()<105 && eleMu_p4.M()>75) && (muon_p4.Pt()>35.0 && ele_p4.Pt()>35.0) && abs(muon_p4.Eta())<1.442 && abs(ele_p4.Eta())<1.442");
    emuPlotter.mcWeight("genWeight * puWeight * 0.995 * tsw::effi_hltMu22( muon_p4.Eta() ) * 0.995");
    emuPlotter.chargeBranches("ele_charge", "muon_charge");
-   emuPlotter.outFilePrefix("results/20140422/emu/emu_heepV41_hiPtMuId_all8TeV_myScaleFactor");
+   emuPlotter.outFilePrefix("results/20140514/emu/emu_heepV41_hiPtMuId_all8TeV_myScaleFactor");
 // emuPlotter.descriptiveText("#sqrt{s} = 8 TeV, #int L dt = 12 fb^{-1} approx, Runs 12A-D; HEEPModIso & MuHighPt, 75-105, PU reweighted");
 
    tsw::MCSample wJets_emu( emuAnaTuples.wJets() );

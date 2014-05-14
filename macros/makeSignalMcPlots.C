@@ -1,6 +1,6 @@
 {
 
-  std::string outPrefix = "results/20140508";
+  std::string outPrefix = "results/2014xxxx";
 
    tsw::Samples2012 samples("zEffiTree");
    std::string selnString = "(abs(mcZ_ele1_p4.Eta())<1.44 && abs(mcZ_ele2_p4.Eta())<1.44) && (mcZ_ele1_p4.Et()>35.0 && mcZ_ele2_p4.Et()>35.0)";
@@ -13,6 +13,8 @@
    plotter.rescaleMC();
 
    plotter.add( tsw::AxisDefn("ZpT", 90, 0.0, 1800, "Z boson p_{T} [GeV]") );
+   plotter.add( tsw::AxisDefn("Zp4.P()", 100, 0.0, 2000, "Z boson momentum [GeV]") );
+   plotter.add( tsw::AxisDefn("Zp4.Eta()", 50, -2.5, 2.5, "Z boson #eta") );
    plotter.add( tsw::AxisDefn("ZdR", 120, 0.0, 1.2, "#DeltaR_{ee}") );
 
    tsw::DistPlotter plotterCI(plotter);
