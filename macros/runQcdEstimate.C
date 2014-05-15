@@ -3,6 +3,7 @@
    tsw::Samples2012 emuAnaTuples("eleMuTree");
    tsw::Samples2012 abcdAnaTuples("abcdDiGsfTree");
 
+   std::string outputDir("results/20140515");
 
    // QCD -- ABCD METHOD // 
    tsw::AbcdJetsEstimator abcdEstimator("abcdDiGsfFrPreTree");
@@ -17,10 +18,11 @@
       .add(  abcdAnaTuples.dyTauTau_mg_merged() )
       .add(  abcdAnaTuples.dyEE_mg_merged() )
       .add(  abcdAnaTuples.wJets()  )
-      .outFilePrefix("results/20140422/qcd_abcd/ABCD_all8TeV");
+     .outFilePrefix( (outputDir+"/qcd_abcd/ABCD_all8TeV").c_str() );
    std::cout << "About to run ..." << std::endl;
-   abcdEstimator.run();
 
+   TH1* abcdEstimate = abcdEstimator.run();
+   abcdEstimate->Scale(20., "width");
 
    // QCD -- SIDEBAND-BASED //
 
@@ -37,10 +39,32 @@
    sidebandEstimator.data( modIsoAnaTuples.data2012() );
 
    // sidebandEstimator.outputFileDir( "" );
-   sidebandEstimator.outputFileTag( "results/20140422/qcd_sideband/sidebandQCD_all8TeV" );
-   sidebandEstimator.run();
+   sidebandEstimator.outputFileTag( (outputDir+"/qcd_sideband/sidebandQCD_all8TeV").c_str() );
+   TGraph* sidebandEstimate = sidebandEstimator.run();
+   sidebandEstimate->SetLineColor(kRed);
+   sidebandEstimate->SetMarkerColor(kRed);
 
 
    // QCD -- COMPARISON //
 
+   TCanvas* c = new TCanvas("c_abcdVsSideband", "ABCD vs Sideband estimates");
+   c->SetLogy();
+   c->cd();
+   abcdEstimate->SetYTitle("Events / 20GeV");
+   abcdEstimate->Draw();
+
+   TF1* fitFunc = new TF1("fitFunc", "exp([0]+[1]*x) + exp([2]+[3]*x)", 0, 900);
+   fitFunc->SetParameter(0, 2.0);
+   fitFunc->SetParameter(1, -9e-3);
+   fitFunc->SetParameter(2, 5.5);
+   fitFunc->SetParameter(3, -5.5e-2);
+   fitFunc->SetLineColor(kBlue);
+   TFitResultPtr fitResult = abcdEstimate->Fit("fitFunc", "I S");
+
+   sidebandEstimate->Draw("P");
+
+   c->SaveAs( (outputDir+"/qcd_abcdVsSideband_all8TeV_pt.pdf").c_str() );
+   c->SaveAs( (outputDir+"/qcd_abcdVsSideband_all8TeV_pt.gif").c_str() );
+
+   std::cout << std::endl << "chi2 = " << fitResult->Chi2() << std::endl;
 }
