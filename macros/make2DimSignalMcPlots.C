@@ -1,6 +1,6 @@
 {
 
-  std::string outPrefix = "results/20140530";
+  std::string outPrefix = "results/2014xxxx";
 
   tsw::Samples2012 samples("zEffiTree");
   std::string selnString = "(abs(mcZ_ele1_p4.Eta())<=1.442 || (abs(mcZ_ele1_p4.Eta())>=1.56 && abs(mcZ_ele1_p4.Eta())<=2.5))";

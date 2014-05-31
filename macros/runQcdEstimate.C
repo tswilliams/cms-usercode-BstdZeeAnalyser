@@ -3,7 +3,7 @@
    tsw::Samples2012 emuAnaTuples("eleMuTree");
    tsw::Samples2012 abcdAnaTuples("abcdDiGsfTree");
 
-   std::string outputDir("results/20140515");
+   std::string outputDir("results/2014xxxx");
 
    // QCD -- ABCD METHOD // 
    tsw::AbcdJetsEstimator abcdEstimator("abcdDiGsfFrPreTree");
