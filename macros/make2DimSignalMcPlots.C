@@ -1,6 +1,6 @@
 {
 
-  std::string outPrefix = "results/2014xxxx";
+  std::string outPrefix = "results/20140530";
 
   tsw::Samples2012 samples("zEffiTree");
   std::string selnString = "(abs(mcZ_ele1_p4.Eta())<=1.442 || (abs(mcZ_ele1_p4.Eta())>=1.56 && abs(mcZ_ele1_p4.Eta())<=2.5))";
@@ -11,7 +11,7 @@
   plotter.setTree("zBosonEffiTree");
   plotter.setSelection(selnString);
   //plotter.descriptiveText("MC truth after acceptance cuts; gauge interaction.");
-  plotter.outFilePrefix( outPrefix + "/qStarGI_2D_afterBasicAcc_" );
+  plotter.outFilePrefix( outPrefix + "/signalMC_2dHist" );
 
   plotter.add( samples.qStarGI_M1000() );
 
