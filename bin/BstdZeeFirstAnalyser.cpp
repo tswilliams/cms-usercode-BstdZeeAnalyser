@@ -185,6 +185,8 @@ namespace tsw{
 
 		TLorentzVector* treeVar_Zp4Ptr_; TLorentzVector treeVar_Zp4_;
 		Double_t treeVar_ZpT_;
+	  Double_t treeVar_Zeta_;
+	  Double_t treeVar_Zp_;
 		Double_t treeVar_Zmass_;
 		Double_t treeVar_dR_;
 		Double_t treeVar_dEta_;
@@ -240,6 +242,8 @@ namespace tsw{
 
 			mainAnaTree_->Branch("Zp4",   &treeVar_Zp4Ptr_);
 			mainAnaTree_->Branch("ZpT",   &treeVar_ZpT_,     "ZpT/D");
+			mainAnaTree_->Branch("Zeta",  &treeVar_Zeta_,    "Zeta/D");
+			mainAnaTree_->Branch("Zp",    &treeVar_Zp_,      "Zp/D");
 			mainAnaTree_->Branch("Zmass", &treeVar_Zmass_,   "Zmass/D");
 			mainAnaTree_->Branch("dR",    &treeVar_dR_,      "dR/D");
 			mainAnaTree_->Branch("dEta",  &treeVar_dEta_,    "dEta/D");
@@ -290,6 +294,8 @@ namespace tsw{
 
 			treeVar_Zp4_   = diEle.p4();
 			treeVar_ZpT_   = diEle.pT();
+			treeVar_Zeta_  = diEle.p4().Eta();
+			treeVar_Zp_    = diEle.p4().P();
 			treeVar_Zmass_ = diEle.invMass();
 			treeVar_dR_    = diEle.deltaR();
 			treeVar_dEta_  = diEle.deltaEta();
@@ -346,6 +352,8 @@ namespace tsw{
 
 		TLorentzVector* treeVar_mcZ_ele1_p4Ptr_; TLorentzVector treeVar_mcZ_ele1_p4_;
 		TLorentzVector* treeVar_mcZ_ele2_p4Ptr_; TLorentzVector treeVar_mcZ_ele2_p4_;
+	  TLorentzVector* treeVar_mcZ_p4Ptr_; TLorentzVector treeVar_mcZ_p4_;
+	  Double_t treeVar_mcZ_dR_;
 		UInt_t treeVar_detRegion_;
 		Bool_t treeVar_bothRecod_;
 
@@ -368,6 +376,7 @@ namespace tsw{
 			treeVar_lheZp4Ptr_( &treeVar_lheZp4_ ),
 			treeVar_mcZ_ele1_p4Ptr_( &treeVar_mcZ_ele1_p4_ ),
 			treeVar_mcZ_ele2_p4Ptr_( &treeVar_mcZ_ele2_p4_ ),
+			treeVar_mcZ_p4Ptr_( &treeVar_mcZ_p4_ ),
 			treeVar_Zp4Ptr_( &treeVar_Zp4_ ),
 			treeVar_eleA_p4Ptr_( &treeVar_eleA_p4_ ),
 			treeVar_eleB_p4Ptr_( &treeVar_eleB_p4_ )
@@ -385,6 +394,8 @@ namespace tsw{
 
 			mainAnaTree_->Branch("mcZ_ele1_p4", &treeVar_mcZ_ele1_p4Ptr_);
 			mainAnaTree_->Branch("mcZ_ele2_p4", &treeVar_mcZ_ele2_p4Ptr_);
+			mainAnaTree_->Branch("mcZ_p4", &treeVar_mcZ_p4_);
+			mainAnaTree_->Branch("mcZ_dR", &treeVar_mcZ_dR_, "mcZ_dR/D");
 			mainAnaTree_->Branch("mc_detRegion",   &treeVar_detRegion_, "mcAccept_pt/i");
 			mainAnaTree_->Branch("bothRecod", &treeVar_bothRecod_, "bothRecod/O");
 
@@ -555,6 +566,8 @@ namespace tsw{
 
 			treeVar_mcZ_ele1_p4_ = mcZboson_ele1;
 			treeVar_mcZ_ele2_p4_ = mcZboson_ele2;
+			treeVar_mcZ_p4_ = mcZboson_ele1 + mcZboson_ele2;
+			treeVar_mcZ_dR_ = mcZboson_ele1.DeltaR( mcZboson_ele2 );
 
  			bool mcZele1_isEB = fabs(mcZboson_ele1.Eta())<1.4;
 			bool mcZele2_isEB = fabs(mcZboson_ele2.Eta())<1.4;
