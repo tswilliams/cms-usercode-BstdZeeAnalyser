@@ -25,7 +25,7 @@
         dataPlots_main.setSelection("(Zmass<105 && Zmass>75) && (abs(dPhi)>=0.3 || abs(dEta)>=0.07) && (eleA_modHeepStdThr==0 && eleB_modHeepStdThr==0)");
 	dataPlots_main.setWeight("genWeight * puWeight * tsw::totalClusEtTurnOn(eleA_p4.Pt(),eleA_p4.Eta()) * tsw::totalClusEtTurnOn(eleB_p4.Pt(),eleB_p4.Eta())");
 	dataPlots_main.rescaleMC();
-  	dataPlots_main.descriptiveText("#phi-road veto, 75-105, PU reweighted");
+  	//dataPlots_main.descriptiveText("#phi-road veto, 75-105, PU reweighted");
 
 	dataPlots_main.add( modIsoAnaTuples.wJets() );
 	dataPlots_main.add( modIsoAnaTuples.dyTauTau_mg() );
@@ -33,27 +33,28 @@
 	dataPlots_main.add( modIsoAnaTuples.vzBkgds()  );
 	dataPlots_main.add( modIsoAnaTuples.dyEE_mg_merged() );
 
-	dataPlots_main.add_signal( modIsoAnaTuples.qStarCI_M1000() );
-	dataPlots_main.add_signal( modIsoAnaTuples.qStarCI_M1500() );
+	//	dataPlots_main.add_signal( modIsoAnaTuples.qStarGI_M1000() );
+	dataPlots_main.add_signal( modIsoAnaTuples.qStarGI_M1500() );
 
 	dataPlots_main.data( modIsoAnaTuples.data2012() );
 	
 	tsw::DistPlotter dataPlots_wideMass(dataPlots_main);
 
-	dataPlots_main.add( tsw::AxisDefn("ZpT", 50, 0.0, 1000.0, "p_{T,ee} [GeV]"), true, true );
+	dataPlots_main.add( tsw::AxisDefn("ZpT", 32, 250.0, 1050.0, "p_{T,ee} [GeV]"), true, true );
   	dataPlots_main.add( tsw::AxisDefn("Zp4.P()", 70, 0.0, 1400.0, "Z momentum [GeV]"), true, true);
-  	dataPlots_main.add( tsw::AxisDefn("Zmass", 55, 65.0, 120.0, "M_{ee} [GeV]"));
+  	//dataPlots_main.add( tsw::AxisDefn("Zmass", 30, 75.0, 105.0, "M_{ee} [GeV]"), false, true );
+  	dataPlots_main.add( tsw::AxisDefn("Zmass", 55, 65.0, 120.0, "M_{ee} [GeV]") );
 	dataPlots_main.add( tsw::AxisDefn("Zp4.Eta()", 40, -4.0, +4.0, "Z boson #eta"));
 	dataPlots_main.add( tsw::AxisDefn("Zp4.Phi()", 20, -3.14, +3.14, "Z boson #phi"));
-	dataPlots_main.add( tsw::AxisDefn("eleA_p4.Pt()", 45, 0.0, 900.0, "Leading ele p_{T} [GeV]"));
+	dataPlots_main.add( tsw::AxisDefn("eleA_p4.Pt()", 45, 0.0, 900.0, "Leading ele p_{T} [GeV]") );
 	dataPlots_main.add( tsw::AxisDefn("eleB_p4.Pt()", 45, 0.0, 450.0, "Sub-leading ele p_{T} [GeV]"), true, true);
   	dataPlots_main.add( tsw::AxisDefn("nVtx", 40, -0.5, 39.5, "N_{vtx}"), false, true);
 //
-  	dataPlots_main.add( tsw::AxisDefn("dR", 60, 0.0, 6.0, "#DeltaR_{ee}"), false, true);
+  	dataPlots_main.add( tsw::AxisDefn("dR", 35, 0.0, 3.5, "#DeltaR_{ee}"), false, true);
   	dataPlots_main.add( tsw::AxisDefn("dEta", 64, -3.2, +3.2, "#Delta#eta_{ee}"));
   	dataPlots_main.add( tsw::AxisDefn("dPhi", 40, -3.14, +3.14, "#Delta#phi_{ee}"));
 
-	dataPlots_main.outFilePrefix("results/2014xxxx/data_vs_mc/ZCand_ModIso75To105_phiRd_PUweight_all8TeV");
+	dataPlots_main.outFilePrefix("results/2014xxxx/data_vs_mc/bZCand_ModIso75To105_phiRd_PUweight_all8TeV");
 	dataPlots_main.run( );
 
 	/*dataPlots_wideMass.setSelection("(abs(dPhi)>=0.3 || abs(dEta)>=0.07) && (eleA_modHeepStdThr==0 && eleB_modHeepStdThr==0)");

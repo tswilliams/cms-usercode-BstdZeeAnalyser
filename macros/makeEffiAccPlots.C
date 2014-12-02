@@ -8,7 +8,7 @@
 	std::string seln_ebee                   = "( (abs(eleA_p4.Eta())<1.442 && abs(eleB_p4.Eta())<2.5 && abs(eleB_p4.Eta())>1.56) || (abs(eleB_p4.Eta())<1.442 && abs(eleA_p4.Eta())>1.56 && abs(eleA_p4.Eta())<2.5) )";
 	std::string seln_eeee                   = "( abs(eleA_p4.Eta())>1.56 && abs(eleA_p4.Eta())<2.5 && abs(eleB_p4.Eta())>1.56 && abs(eleB_p4.Eta())<2.5 )";
 	std::string seln_cms_eta_pt15           = "(eleA_p4.Pt()>15.0 && eleB_p4.Pt()>15.0) && "+seln_cms_eta;
- 	std::string seln_accept                 = "( (eleA_p4.Pt()>35.0 && abs(eleA_p4.Eta())<1.44 ) && (eleB_p4.Pt()>35.0 && abs(eleB_p4.Eta())<1.44) && (Zp4.M()>75.0 && Zp4.M()<105.0) )";
+ 	std::string seln_accept                 = "( (eleA_p4.Pt()>35.0 && abs(eleA_p4.Eta())<1.44 ) && (eleB_p4.Pt()>35.0 && abs(eleB_p4.Eta())<1.44) && (Zp4.M()>75.0 && Zp4.M()<105.0) && (abs(mcZ_ele1_p4.Eta()-mcZ_ele2_p4.Eta())>=0.07 || mcZ_dR>=0.3) )";
 	std::string seln_reco                   = "bothRecod";
 	std::string seln_MPhiVeto               = "(abs(ZdEta)>0.07 || abs(ZdPhi)>0.3)";
 	std::string seln_acceptRecoAndPhiVeto  = tsw::AndOfCuts( tsw::AndOfCuts(seln_accept, seln_reco), seln_MPhiVeto);
@@ -70,7 +70,7 @@
 	//------------------------------------//
 
 	//tsw::CompositeMC qStarGI = anaTuples.qStarGI();
-	std::string acc_plot_dir = "results/20130424/accPlots";
+	std::string acc_plot_dir = "results/2014xxxx/accPlots";
 	tsw::AcceptancePlotter acc_effi_simple("zBosonEffiTree", "1", 0.0);
 	tsw::AcceptancePlotter acc_ebee(acc_effi_simple);
 	tsw::AcceptancePlotter acc_pt_thr(acc_effi_simple);
@@ -81,20 +81,20 @@
 	  .add( anaTuples.qStarCI() )
 	  .add( tsw::EffiDefn( seln_cms_eta_pt15, seln_ebeb, "Barrel-Barrel", tsw::Blue) )
 	  .add( tsw::EffiDefn( seln_cms_eta_pt15, seln_ebee, "Barrel-Endcap", tsw::Red) )
-	  .add( tsw::EffiDefn( seln_cms_eta_pt15, seln_eeee, "Endcap-Endcap", tsw::Black) )
-	  .outFilePrefix(acc_plot_dir + "/signalMc_barrelEndcapFracVsMass")
-	  .descriptiveText("Denominator: Electrons within barrel/endcaps #eta range and p_{T}>15GeV")
-	  .run();
+	  .add( tsw::EffiDefn( seln_cms_eta_pt15, seln_eeee, "Endcap-Endcap", tsw::Black) );
+	acc_ebee.outFilePrefix(acc_plot_dir + "/signalMc_barrelEndcapFracVsMass");
+	acc_ebee.descriptiveText("Denominator: Electrons within barrel/endcaps #eta range and p_{T}>15GeV");
+        acc_ebee.run();
 
 	acc_pt_thr
 	  .add( anaTuples.qStarGI() )
 	  .add( anaTuples.qStarCI() )
 	  .add( tsw::EffiDefn( tsw::AndOfCuts(seln_cms_eta_pt15, seln_ebeb), "eleA_p4.Pt()>35.0", "Leading p_{T}>35", tsw::Blue) )
-	  .add( tsw::EffiDefn( tsw::AndOfCuts(seln_cms_eta_pt15, seln_ebeb), "eleB_p4.Pt()>35.0", "SubLead p_{T}>35", tsw::Red) )
+	  .add( tsw::EffiDefn( tsw::AndOfCuts(seln_cms_eta_pt15, seln_ebeb), "eleB_p4.Pt()>35.0", "SubLead p_{T}>35", tsw::Red) );
 	  //.add( tsw::EffiDefn( tsw::AndOfCuts(seln_cms_eta_pt20, seln_ebeb), "eleA_p4.Pt()>35.0 && eleB_p4.Pt()>35.0", "Both p_{T}>35", tsw::Black) )
-	  .outFilePrefix(acc_plot_dir + "/signalMc_ptThrEffiVsMass")
-	  .descriptiveText("Denominator: Electrons within barrel/endcaps #eta range and p_{T}>15GeV")
-	  .run();
+	acc_pt_thr.outFilePrefix(acc_plot_dir + "/signalMc_ptThrEffiVsMass");
+	acc_pt_thr.descriptiveText("Denominator: Electrons within barrel/endcaps #eta range and p_{T}>15GeV");
+	acc_pt_thr.run();
 
 
 	acc_effi_simple
@@ -103,9 +103,9 @@
 	  //.add( tsw::EffiDefn( "1", seln_cms_eta, "CMS #eta", tsw::Pink) )
 	  .add( absEffi_accept )
 	  .add( tsw::EffiDefn( seln_accept, relEffi_modHeepStdThr.denomAndNumerCuts(), "Efficiency", tsw::Blue) )
-	  .add( tsw::EffiDefn( "1",         relEffi_modHeepStdThr.denomAndNumerCuts(), "Acc x Effi", tsw::Black) )
-	  .outFilePrefix(acc_plot_dir + "/signalMc_accEffiVsMass")
-	  .run();
+	  .add( tsw::EffiDefn( "1",         relEffi_modHeepStdThr.denomAndNumerCuts(), "Acc x Effi", tsw::Black) );
+        acc_effi_simple.outFilePrefix(acc_plot_dir + "/signalMc_accEffiVsMass");
+	acc_effi_simple.run();
 
 	acc_effi_detail
 	  .add( anaTuples.qStarGI() )
@@ -114,10 +114,10 @@
 	  .add( absEffi_reco )
 	  .add( absEffi_MPhiVeto )
 	  .add( absEffi_heepId )
-	  .add( absEffi_modHeepStdThr )
-	  .outFilePrefix(acc_plot_dir + "/signalMc_accDetailEffiVsMass")
-	  .descriptiveText("Denominator: All events")
-	  .run();
+	  .add( absEffi_modHeepStdThr );
+	acc_effi_detail.outFilePrefix(acc_plot_dir + "/signalMc_accDetailEffiVsMass");
+	acc_effi_detail.descriptiveText("Denominator: All events");
+	acc_effi_detail.run();
 
 	std::cout << " + Bailing out before effi plots ... " << std::endl; throw std::exception();
 

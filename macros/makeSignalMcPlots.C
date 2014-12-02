@@ -16,6 +16,7 @@
    plotter.add( tsw::AxisDefn("Zp4.P()", 100, 0.0, 2000, "Z boson momentum [GeV]") );
    plotter.add( tsw::AxisDefn("Zp4.Eta()", 50, -2.5, 2.5, "Z boson #eta") );
    plotter.add( tsw::AxisDefn("ZdR", 120, 0.0, 1.2, "#DeltaR_{ee}") );
+   plotter.add( tsw::AxisDefn("TMath::Log10(Zp4.P())", 170, 2, 3.7, "log(Z boson momentum [GeV])") );
 
    tsw::DistPlotter plotterCI(plotter);
    plotterCI.outFilePrefix( outPrefix + "/qStarCI_afterAcc_" );

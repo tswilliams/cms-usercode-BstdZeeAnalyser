@@ -53,6 +53,7 @@
    abcdEstimate->SetYTitle("Events / 20GeV");
    abcdEstimate->Draw();
 
+   /* Remove fit from plot
    TF1* fitFunc = new TF1("fitFunc", "exp([0]+[1]*x) + exp([2]+[3]*x)", 0, 900);
    fitFunc->SetParameter(0, 2.0);
    fitFunc->SetParameter(1, -9e-3);
@@ -60,11 +61,12 @@
    fitFunc->SetParameter(3, -5.5e-2);
    fitFunc->SetLineColor(kBlue);
    TFitResultPtr fitResult = abcdEstimate->Fit("fitFunc", "I S");
-
+   */
    sidebandEstimate->Draw("P");
+   //std::cout << std::endl << "chi2 = " << fitResult->Chi2() << std::endl;
+   
 
    c->SaveAs( (outputDir+"/qcd_abcdVsSideband_all8TeV_pt.pdf").c_str() );
    c->SaveAs( (outputDir+"/qcd_abcdVsSideband_all8TeV_pt.gif").c_str() );
 
-   std::cout << std::endl << "chi2 = " << fitResult->Chi2() << std::endl;
 }
