@@ -14,7 +14,8 @@
    plotter.outFilePrefix( outPrefix + "/dySamplesTruth_" );
    plotter.rescaleMC();
 
-   plotter.add( tsw::AxisDefn("ZpT", "[0,2,4,6,8,10,12.5,15,17.5,20,30,40,50,70,90,110,150,190,250,350,550, 750,1000,1250,1500,1750,2000]", "Z boson p_{T} [GeV]", 1.0) );
+   //   plotter.add( tsw::AxisDefn("ZpT", "[0,2,4,6,8,10,12.5,15,17.5,20,30,40,50,70,90,110,150,190,250,350,550, 750,1000,1250,1500,1750,2000]", "Z boson p_{T} [GeV]", 1.0) );
+   plotter.add( tsw::AxisDefn("ZpT", "[250,350,550, 750,1000,1250]", "Z boson p_{T} [GeV]", 1.0) );
 
    //   plotter.add( tsw::AxisDefn("Zp4.P()", 100, 0.0, 2000, "Z boson momentum [GeV]") );
    //   plotter.add( tsw::AxisDefn("Zp4.Eta()", 50, -2.5, 2.5, "Z boson #eta") );
@@ -93,9 +94,8 @@
    std::cout << " integral, expertPowhegZpt : " << hist->Integral("width") << std::endl;
    std::cout << "   ... now re-norm to 1 ... " << std::endl;
 
-   Double_t scaleFactor = 1.0 / hist->Integral("width");
-   for(Int_t i=1; i<=26; i++)
-     hist->SetBinContent(i, scaleFactor * hist->GetBinContent(i));
+   Double_t scaleFactor = 1.0 / hist->Integral(19, 23, "width");
+   hist->Scale( scaleFactor);
 
    std::cout << " integral, expertPowhegZpt : " << hist->Integral("width") << std::endl;
 
