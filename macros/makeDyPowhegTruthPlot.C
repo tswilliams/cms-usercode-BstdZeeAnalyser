@@ -3,41 +3,30 @@
    std::string outPrefix = "results/2014xxxx";
 
    tsw::Samples2012 samples("zEffiTree");
-   tsw::DistPlotter plotter(true);
+   tsw::SetStyle()->cd();
 
-   plotter.setTree("zBosonEffiTree");
-   plotter.setWeight("genWeight * puWeight");
-   //std::string selnString = "(abs(mcZ_ele1_p4.Eta())<1.44 && abs(mcZ_ele2_p4.Eta())<1.44) && (mcZ_ele1_p4.Et()>35.0 && mcZ_ele2_p4.Et()>35.0)";
-   //plotter.setSelection("(Zmass<105 && Zmass>75) && (abs(dPhi)>=0.3 || abs(dEta)>=0.07) && (eleA_modHeepStdThr==0 && eleB_modHeepStdThr==0)");
-   plotter.setSelection("(abs(mcZ_ele1_p4.Eta())<2.1) && (abs(mcZ_ele2_p4.Eta())<2.1) && (mcZ_ele1_p4.Et()>20.0) && (mcZ_ele2_p4.Et()>20.0)");
-
-   plotter.outFilePrefix( outPrefix + "/dySamplesTruth_" );
-   plotter.rescaleMC();
-
-   //   plotter.add( tsw::AxisDefn("ZpT", "[0,2,4,6,8,10,12.5,15,17.5,20,30,40,50,70,90,110,150,190,250,350,550, 750,1000,1250,1500,1750,2000]", "Z boson p_{T} [GeV]", 1.0) );
-   plotter.add( tsw::AxisDefn("ZpT", "[250,350,550, 750,1000,1250]", "Z boson p_{T} [GeV]", 1.0) );
-
-   //   plotter.add( tsw::AxisDefn("Zp4.P()", 100, 0.0, 2000, "Z boson momentum [GeV]") );
-   //   plotter.add( tsw::AxisDefn("Zp4.Eta()", 50, -2.5, 2.5, "Z boson #eta") );
-   //   plotter.add( tsw::AxisDefn("dR", 120, 0.0, 1.2, "#DeltaR_{ee}") );
-   //   plotter.add( tsw::AxisDefn("eleA_p4.Eta()", 50, -2.5, 2.5, "Leading ele #eta") );
-   //   plotter.add( tsw::AxisDefn("eleB_p4.Eta()", 50, -2.5, 2.5, "Sub-leading ele #eta") );
+   std::string treeName("zBosonEffiTree");
+   tsw::AxisDefn axisDefn("ZpT", "[0,2,4,6,8,10, 12.5,15,17.5,20,30, 40,50,70,90,110, 150,190,250,350,550, 750,1000,1250,1500,1750, 2000]", "Z boson p_{T} [GeV]", 1.0);
+   std::string boostedZeeSeln("(abs(mcZ_ele1_p4.Eta())<2.1) && (abs(mcZ_ele2_p4.Eta())<2.1) && (mcZ_ele1_p4.Et()>20.0) && (mcZ_ele2_p4.Et()>20.0)");
+   TH1* histBoostedZeeMG = samples.dyEE_mg_merged().getFilledHist("hBoostedZee_MG_ZpT", treeName, axisDefn, boostedZeeSeln, "exp(-4.8 * ZpT / 10000.0)");
+   histBoostedZeeMG->Scale( 1.0 / histBoostedZeeMG->Integral(19,23,"width") );
 
 
-   plotter.add( samples.dyEE_mg_merged() );
-   //plotter.add( samples.dyEE_sherpa() );
-   //plotter.add( samples.dyEE_powheg() );
-   //plotter.add( samples.dyEE_pythia() );
-
-   plotter.run();
-
+   TCanvas* c = new TCanvas("canvas", "Z boson pT", 600, 400);
+   c->cd();
+   c->SetLogy();
+   histBoostedZeeMG->Draw();
+   histBoostedZeeMG->GetXaxis()->SetRangeUser(250, 1249);
+   histBoostedZeeMG->GetYaxis()->SetTitle("Fraction / 1 GeV");
 
    Float_t binLims[] = {0,2,4,6,8,10, 12.5,15,17.5,20,30, 40,50,70,90,110, 150,190,250,350,550, 750,1000,1250,1500,1750, 2000};
    TH1F* hist = new TH1F("expertPowhegZpt", "expertPowhegZpt", 26, binLims);
 
    for(Int_t i=1; i<=26; i++)
+   {
      hist->SetBinContent(i, 0.1);
-
+     hist->SetBinError(i, 0.0);
+   }
    /*hist->SetBinContent(1,  2.144295e-02);
    hist->SetBinContent(2,  4.814757e-02);
    hist->SetBinContent(3,  5.069378e-02);
@@ -100,5 +89,19 @@
    std::cout << " integral, expertPowhegZpt : " << hist->Integral("width") << std::endl;
 
    hist->Draw("SAME");
+
+
+   TCanvas* cRatio = new TCanvas("cRatio", "POWHEG / MadGraph ratio", 600, 400); 
+   cRatio->cd();
+
+
+   TH1* hRatio = (TH1*) hist->Clone("h_zpt_ratio");
+
+   hRatio->Divide(histBoostedZeeMG);
+
+   hRatio->Draw();
+   hRatio->GetXaxis()->SetRangeUser(250, 1249);
+   hRatio->GetYaxis()->SetTitle("Ratio");
+   cRatio->Update();
 
 }
