@@ -1,14 +1,15 @@
 {
 
-   std::string outPrefix = "results/2014xxxx";
+   std::string outDateStamp = "2015xxxx";
+   std::string outPrefix = "results/"+outDateStamp+"/dyTruthPtSpectra_madgraphVsPowheg_"+outDateStamp;
 
    tsw::Samples2012 samples("zEffiTree");
    tsw::SetStyle()->cd();
 
    std::string treeName("zBosonEffiTree");
-   tsw::AxisDefn axisDefn("ZpT", "[0,2,4,6,8,10, 12.5,15,17.5,20,30, 40,50,70,90,110, 150,190,250,350,550, 750,1000,1250,1500,1750, 2000]", "Z boson p_{T} [GeV]", 1.0);
+   tsw::AxisDefn axisDefn("mcZ_p4.Pt()", "[0,2,4,6,8,10, 12.5,15,17.5,20,30, 40,50,70,90,110, 150,190,250,350,550, 750,1000,1250,1500,1750, 2000]", "Z boson p_{T} [GeV]", 1.0);
    std::string boostedZeeSeln("(abs(mcZ_ele1_p4.Eta())<2.1) && (abs(mcZ_ele2_p4.Eta())<2.1) && (mcZ_ele1_p4.Et()>20.0) && (mcZ_ele2_p4.Et()>20.0)");
-   TH1* histBoostedZeeMG = samples.dyEE_mg_merged().getFilledHist("hBoostedZee_MG_ZpT", treeName, axisDefn, boostedZeeSeln, "exp(-4.8 * ZpT / 10000.0)");
+   TH1* histBoostedZeeMG = samples.dyEE_mg_merged().getFilledHist("hBoostedZee_MG_ZpT", treeName, axisDefn, boostedZeeSeln, "exp(-4.8 * mcZ_p4.Pt() / 10000.0)");
    histBoostedZeeMG->Scale( 1.0 / histBoostedZeeMG->Integral(19,23,"width") );
 
 
@@ -90,8 +91,17 @@
 
    hist->Draw("SAME");
 
+   TLegend* leg = new TLegend(0.55, 0.72, 0.9, 0.88);
+   leg->SetFillColor(kWhite);
+   leg->AddEntry(histBoostedZeeMG, "MadGraph with k-factor", "L");
+   leg->AddEntry(hist, "POWHEG", "L");
+   leg->Draw();
 
-   TCanvas* cRatio = new TCanvas("cRatio", "POWHEG / MadGraph ratio", 600, 400); 
+
+   // PART 2
+   // --- RATIO CANVAS
+
+   TCanvas* cRatio = new TCanvas("cRatio", "POWHEG /k-factor-weighted MadGraph ratio", 600, 400); 
    cRatio->cd();
 
 
@@ -100,8 +110,16 @@
    hRatio->Divide(histBoostedZeeMG);
 
    hRatio->Draw();
+   hRatio->GetXaxis()->SetTitle("Z boson p_{T} [GeV]");
    hRatio->GetXaxis()->SetRangeUser(250, 1249);
    hRatio->GetYaxis()->SetTitle("Ratio");
+   hRatio->GetYaxis()->SetRangeUser(0.48, 1.52);
    cRatio->Update();
 
+   TLine* line = new TLine(250, 1.0, 1249, 1.0);
+   line->SetLineStyle(3);
+   line->Draw();
+
+   c->SaveAs((outPrefix+".pdf").c_str());
+   cRatio->SaveAs((outPrefix+"_ratio.pdf").c_str());
 }

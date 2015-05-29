@@ -1,35 +1,28 @@
 {
-
-   std::string outPrefix = "results/2014xxxx";
+   std::string outDateStamp = "2015xxxx";
+   std::string outPrefix = "results/"+outDateStamp+"/dyTruthPtSpectra_madgraphVsDittmaierNlo_"+outDateStamp;
 
    tsw::Samples2012 samples("zEffiTree");
-   tsw::DistPlotter plotter(true);
+   tsw::SetStyle();
 
-   plotter.setTree("zBosonEffiTree");
-   plotter.setWeight("genWeight * puWeight");
-   //std::string selnString = "(abs(mcZ_ele1_p4.Eta())<1.44 && abs(mcZ_ele2_p4.Eta())<1.44) && (mcZ_ele1_p4.Et()>35.0 && mcZ_ele2_p4.Et()>35.0)";
-   //plotter.setSelection("(Zmass<105 && Zmass>75) && (abs(dPhi)>=0.3 || abs(dEta)>=0.07) && (eleA_modHeepStdThr==0 && eleB_modHeepStdThr==0)");
-   plotter.setSelection("(abs(mcZ_ele1_p4.Eta())<1.44) && (abs(mcZ_ele2_p4.Eta())<1.44) && (mcZ_ele1_p4.Et()>35.0) && (mcZ_ele2_p4.Et()>35.0)");
+   std::string treeName("zBosonEffiTree");
+   tsw::AxisDefn axisDefn("ZpT", "[250,300,350, 400,450,500,550, 600,650,700,750, 800,850,900,950, 1000,1050,1100,1150,1200]", "Z boson p_{T} [GeV]", 1.0);
+   std::string boostedZeeSeln("(abs(mcZ_ele1_p4.Eta())<1.44) && (abs(mcZ_ele2_p4.Eta())<1.44) && (mcZ_ele1_p4.Et()>35.0) && (mcZ_ele2_p4.Et()>35.0)");
+   std::string weight("exp(-4.8 * mcZ_p4.Pt() / 10000.0)");
 
-   plotter.outFilePrefix( outPrefix + "/dySamplesTruth_" );
-   plotter.rescaleMC();
-
-   plotter.add( tsw::AxisDefn("ZpT", "[250,300,350, 400,450,500,550, 600,650,700,750, 800,850,900,950, 1000,1050,1100,1150,1200]", "Z boson p_{T} [GeV]", 1.0) );
-
-   //   plotter.add( tsw::AxisDefn("Zp4.P()", 100, 0.0, 2000, "Z boson momentum [GeV]") );
-   //   plotter.add( tsw::AxisDefn("Zp4.Eta()", 50, -2.5, 2.5, "Z boson #eta") );
-   //   plotter.add( tsw::AxisDefn("dR", 120, 0.0, 1.2, "#DeltaR_{ee}") );
-   //   plotter.add( tsw::AxisDefn("eleA_p4.Eta()", 50, -2.5, 2.5, "Leading ele #eta") );
-   //   plotter.add( tsw::AxisDefn("eleB_p4.Eta()", 50, -2.5, 2.5, "Sub-leading ele #eta") );
+   TH1* histBoostedZeeMG = samples.dyEE_mg_merged().getFilledHist("hBoostedZee_MG_ZpT", treeName, axisDefn, boostedZeeSeln, weight);
+   histBoostedZeeMG->Scale( 1.0 / histBoostedZeeMG->Integral("width") );
 
 
-   plotter.add( samples.dyEE_mg_merged() );
-   //plotter.add( samples.dyEE_sherpa() );
-   //plotter.add( samples.dyEE_powheg() );
-   //plotter.add( samples.dyEE_pythia() );
+   TCanvas* c = new TCanvas("canvas", "Z boson pT spectra", 600, 400);
+   c->cd(); c->SetLogy();
+   histBoostedZeeMG->Draw();
+   histBoostedZeeMG->GetYaxis()->SetTitle("Fraction / 1 GeV");
+   TLegend* leg = new TLegend(0.55, 0.62, 0.9, 0.88);
+   leg->SetFillColor(kWhite);
+   leg->AddEntry(histBoostedZeeMG, "MadGraph with k-factor", "L");
 
-   plotter.run();
-
+   // Extract NLO calculation from file ...
    std::string nloFileName( "data/ptV_CMS_250to1200.plot.txt" );
    std::vector<Float_t> binLims = tsw::GetColumnFromFile(nloFileName, 0);
    binLims.push_back(1200);
@@ -80,8 +73,62 @@
    h_halfQ_NLO->SetLineColor(kMagenta);
 
    h_central_NLO->Draw("SAME E2 B");
+   leg->AddEntry(h_central_NLO, "NLO QCD, LO EWK", "F");
    h_central_NLO_EWK->Draw("SAME");
+   leg->AddEntry(h_central_NLO_EWK, "NLO QCD and EWK", "L");
    //   h_doubleQ_NLO->Draw("SAME");
    //   h_halfQ_NLO->Draw("SAME");
 
+   leg->Draw();
+
+
+   TCanvas* cRatio = new TCanvas("cRatio", "Z boson pT: Ratio Dittmaier / MadGraph", 600, 400);
+   cRatio->cd();
+
+   TH1* h_ratio_NLO = (TH1*) h_central_NLO->Clone("h_ratio_NLO");
+   TH1* h_ratio_NLO_EWK = (TH1*) h_central_NLO_EWK->Clone("h_ratio_NLO_EWK");
+   TH1* h_ratio_MG = (TH1*) histBoostedZeeMG->Clone("h_ratio_MG"); // For MG stat uncert band
+   for(size_t i=0; i<=h_ratio_NLO_EWK->GetNbinsX(); i++)
+   {
+     h_ratio_MG->SetBinError(i, 0.0);
+   }
+
+   h_ratio_NLO->Divide(h_ratio_MG);
+   h_ratio_NLO_EWK->Divide(histBoostedZeeMG);
+   h_ratio_MG->Divide(histBoostedZeeMG);
+
+   // Must set errors to be non-zero in order for ROOT to 
+   // display the histogram correctly (i.e. point with 
+   // horizontal error lines, rather than like a bar chart)
+   for(size_t i=0; i<=h_ratio_NLO_EWK->GetNbinsX(); i++)
+   {
+     //h_ratio_NLO->SetBinError(i, 0.0001);
+     h_ratio_NLO_EWK->SetBinError(i, 0.0001);
+   }
+
+   h_ratio_MG->SetFillStyle(3002);
+   h_ratio_MG->SetFillColor(7);
+   h_ratio_MG->SetMarkerSize(0);
+   h_ratio_MG->Draw("E2 B");
+   h_ratio_MG->GetXaxis()->SetTitle("Z boson p_{T} [GeV]");
+   h_ratio_MG->GetYaxis()->SetRangeUser(0.2,1.8);
+   h_ratio_MG->GetYaxis()->SetTitle("Ratio");
+
+   TLine* lineAtOne = new TLine(250, 1.0, 1200, 1.0);
+   lineAtOne->SetLineStyle(3);
+   lineAtOne->Draw();
+
+   h_ratio_NLO->SetMarkerColor(kGreen);
+   h_ratio_NLO->SetLineColor(kGreen);
+   h_ratio_NLO->SetFillColor(kGreen);
+   h_ratio_NLO->SetFillStyle(3004);
+   h_ratio_NLO->Draw("SAME E2 B");
+   h_ratio_NLO_EWK->Draw("SAME E");
+
+   cRatio->Update();
+
+
+   // Save canvases to file
+   c->SaveAs( (outPrefix+".pdf").c_str() );
+   cRatio->SaveAs( (outPrefix+"_ratio.pdf").c_str() );
 }
