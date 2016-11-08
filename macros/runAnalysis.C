@@ -31,10 +31,13 @@
 	dataPlots_main.add( modIsoAnaTuples.dyTauTau_mg() );
 	dataPlots_main.add( modIsoAnaTuples.topBkgds() );
 	dataPlots_main.add( modIsoAnaTuples.vzBkgds()  );
-	dataPlots_main.add( modIsoAnaTuples.dyEE_mg_merged() );
+        tsw::CompositeMC dyEE( modIsoAnaTuples.dyEE_mg_merged() );
+        dyEE.mWeight = "exp(-4.8 * (ZpT - 250.0) / 10000.0)";
+	dataPlots_main.add( dyEE );
 
 	//	dataPlots_main.add_signal( modIsoAnaTuples.qStarGI_M1000() );
 	dataPlots_main.add_signal( modIsoAnaTuples.qStarGI_M1500() );
+	dataPlots_main.add_signal( modIsoAnaTuples.qStarCI_M2000() );
 
 	dataPlots_main.data( modIsoAnaTuples.data2012() );
 	
@@ -42,8 +45,8 @@
 
 	dataPlots_main.add( tsw::AxisDefn("ZpT", 32, 250.0, 1050.0, "p_{T,ee} [GeV]"), true, true );
   	dataPlots_main.add( tsw::AxisDefn("Zp4.P()", 70, 0.0, 1400.0, "Z momentum [GeV]"), true, true);
-  	//dataPlots_main.add( tsw::AxisDefn("Zmass", 30, 75.0, 105.0, "M_{ee} [GeV]"), false, true );
-  	dataPlots_main.add( tsw::AxisDefn("Zmass", 55, 65.0, 120.0, "M_{ee} [GeV]") );
+        //dataPlots_main.add( tsw::AxisDefn("Zmass", 30, 75.0, 105.0, "M_{ee} [GeV]"), false, true );
+        dataPlots_main.add( tsw::AxisDefn("Zmass", 55, 65.0, 120.0, "M_{ee} [GeV]") );
 	dataPlots_main.add( tsw::AxisDefn("Zp4.Eta()", 40, -4.0, +4.0, "Z boson #eta"));
 	dataPlots_main.add( tsw::AxisDefn("Zp4.Phi()", 20, -3.14, +3.14, "Z boson #phi"));
 	dataPlots_main.add( tsw::AxisDefn("eleA_p4.Pt()", 45, 0.0, 900.0, "Leading ele p_{T} [GeV]") );
